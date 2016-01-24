@@ -109,7 +109,47 @@
             </pre></code>
           </section>
         </section>
-       
+        <section>
+          <section>
+            <h1>Test run</h1>
+          </section>
+          <section>
+            <h1>Important things</h1>
+            <ol>
+              <li>A lot of load</li>
+              <li>Reliable load</li>
+              <li>Long runs</li>
+            </ol>
+          </section>
+          <section>
+            <h1>core.async scenarios</h1>
+            <pre><code>
+              (map (fn [virtual-user-id]
+                      (go
+                         (run-scenario virtual-user-id)))
+                   (range concurrency))
+            </pre></code>
+          </section>
+          <section>
+            <h1>core.async request</h1>
+            <pre><code>
+            (doseq [request requests]
+              (let [response (chan)
+                    callback (fn [result] (put! response result))]
+                (go
+                  (request callback))))
+            </pre></code>
+          </section>
+          <section>
+            <h1>continuous</h1>
+            <pre><code>
+            (let [response (chan)]
+              (go-loop []
+                (let [result (! (run-scenario)
+                  (>! response result)))))
+            </pre></code>
+          </section>
+        </section>
 			</div>
 
 		</div>
