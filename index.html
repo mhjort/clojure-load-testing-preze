@@ -56,6 +56,60 @@
           --Wikipedia
          </i></p>
 				</section>
+        <section>
+        <h2>In practice</h2>
+        <ol>
+          <li>Define scenarios</li>
+          <li>Generate load (=run)</li>
+          <li>Analyze the results</li>
+        </ol>
+        </section>
+        <section>
+          <section>
+            <h1>Define scenarios</h1>
+          </section>
+          <section>
+            <h2>Scenarios as code</h2>
+          </section>
+          <section>
+            <h1>Scenario steps</h1>
+            <pre><code data-trim data-noescape>
+            {:name "Login & logout"
+             :requests [{:name "Login" :fn login}
+                         :name "Logout" :fn logout}}
+            </pre></code>
+          </section>
+          <section>
+            <h1>Scenario code</h1>
+            <pre><code>
+           (defn- ok? [cb {:keys [status]}]
+              (cb (= 200 status)))
+
+            (defn login [cb]
+              (http/get "http://my-service/login"
+                        {}
+                        (partial ok? cb)))
+
+            (defn logout [cb]
+              (http/get "http://my-service/logout"
+                        {}
+                        (partial ok? cb)))
+            </pre></code>
+          </section>
+
+          <section>
+            <h1>Realistic simulation</h1>
+            <pre><code>
+            [{:name "Login & logout"
+              :weight 5
+              :requests [...]}
+             {:name "Register"
+              :weight 1
+              :requests [...]}]
+            </pre></code>
+          </section>
+        </section>
+       
 			</div>
 
 		</div>
