@@ -111,10 +111,10 @@
         </section>
         <section>
           <section>
-            <h1>Test run</h1>
+            <h1>Running tests</h1>
           </section>
           <section>
-            <h1>Important things</h1>
+            <h1>Things to consider</h1>
             <ol>
               <li>A lot of load</li>
               <li>Reliable load</li>
@@ -122,7 +122,7 @@
             </ol>
           </section>
           <section>
-            <h1>core.async scenarios</h1>
+            <h1>Concurrent scenarios</h1>
             <pre><code>
               (map (fn [virtual-user-id]
                       (go
@@ -131,7 +131,7 @@
             </pre></code>
           </section>
           <section>
-            <h1>core.async request</h1>
+            <h1>Sequential scenario steps</h1>
             <pre><code>
             (doseq [request requests]
               (let [response (chan)
@@ -141,15 +141,42 @@
             </pre></code>
           </section>
           <section>
-            <h1>continuous</h1>
+            <h1>Long running scenarios</h1>
             <pre><code>
             (let [response (chan)]
               (go-loop []
-                (let [result (! (run-scenario)
-                  (>! response result)))))
+                (let [result (&lt;! (run-scenario)
+                  (&gt;! response result)))))
             </pre></code>
           </section>
-        </section>
+          <section>
+            <h1>Moar load</h1>
+            <h2>AWS Lambda - run your function in cloud</h2>
+          </section>
+          <section>
+            <h3>Lambda runner</h3>
+            <pre><code>
+(deflambdafn loadTesting.LambdaFn [is os ctx]
+  (let [input (parse-stream (io/reader is) true)
+    (run-simulation (:scenarios input)
+                    (:concurrency input))
+            </pre></code>
+
+            <h3>Remote invoker</h3>
+            <pre><code>
+(lambda/invoke :function-name "loadTesting.LambdaFn"
+               :payload (generate-string {:scenarios scenarios
+                                          :concurrency 100}))
+            </pre></code>
+          </section>
+          <section>
+            <h2>Lambdas in parallel</h2>
+            <pre><code>
+(mapv #(thread (invoke-lambda % scenarios concurrency))
+      lambda-nodes)
+            </pre></code>
+          </section>
+      </section>
 			</div>
 
 		</div>
