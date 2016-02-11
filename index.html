@@ -57,22 +57,17 @@
          </i></p>
 				</section>
         <section>
-        <h2>In practice</h2>
-        <ol>
-          <li>Define scenarios</li>
-          <li>Generate load (=run)</li>
-          <li>Analyze the results</li>
-        </ol>
+          <h2>In practice</h2>
         </section>
         <section>
           <section>
-            <h1>Define scenarios</h1>
+           <h2>1) Define scenarios</h2>
           </section>
           <section>
             <h2>Scenarios as code</h2>
           </section>
           <section>
-            <h1>Scenario steps</h1>
+            <h1>Scenario</h1>
             <pre><code data-trim data-noescape>
             {:name "Login & logout"
              :requests [{:name "Login" :fn login}
@@ -80,7 +75,7 @@
             </pre></code>
           </section>
           <section>
-            <h1>Scenario code</h1>
+            <h1>Scenario actions</h1>
             <pre><code>
            (defn- ok? [cb {:keys [status]}]
               (cb (= 200 status)))
@@ -96,9 +91,8 @@
                         (partial ok? cb)))
             </pre></code>
           </section>
-
           <section>
-            <h1>Realistic simulation</h1>
+            <h1>Simulation</h1>
             <pre><code>
             [{:name "Login & logout"
               :weight 5
@@ -111,15 +105,21 @@
         </section>
         <section>
           <section>
-            <h1>Running tests</h1>
+            <h2>2) Generate load (=run)</h2>
           </section>
           <section>
-            <h1>Things to consider</h1>
-            <ol>
-              <li>A lot of load</li>
-              <li>Reliable load</li>
-              <li>Long runs</li>
-            </ol>
+            <h2>Things to consider</h2>
+          </section>
+          <section>
+            <h2>Load generation</h2>
+            <img src="img/collider.jpg"/>
+          </section>
+          <section>
+            <h2>Determinism</h2>
+          </section>
+          <section>
+            <h2>Long run</h2>
+            <img src="img/marathon.jpg"/>
           </section>
           <section>
             <h1>Concurrent scenarios</h1>
@@ -149,9 +149,21 @@
                   (&gt;! response result)))))
             </pre></code>
           </section>
+        </section>
+        <section>
           <section>
-            <h1>Moar load</h1>
-            <h2>AWS Lambda - run your function in cloud</h2>
+            <h2>3) Analyze the results</h2>
+          </section>
+          <section>
+            <img src="img/results.png"/>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h2>Moar load</h2>
+          </section>
+          <section>
+            <h2>AWS Lambda - run your functions in cloud</h2>
           </section>
           <section>
             <h3>Lambda runner</h3>
@@ -164,9 +176,12 @@
 
             <h3>Remote invoker</h3>
             <pre><code>
-(lambda/invoke :function-name "loadTesting.LambdaFn"
-               :payload (generate-string {:scenarios scenarios
-                                          :concurrency 100}))
+(let [payload {:simulation 'simulations/login-simulation
+               :concurrency 100}]
+  (.invoke (AWSLambdaClient.)
+           (-> (InvokeRequest.)
+             (.withFunctionName "LoadTestingLambda")
+             (.withPayload (generate-string payload)))))
             </pre></code>
           </section>
           <section>
