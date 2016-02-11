@@ -145,8 +145,10 @@
             <pre><code>
             (let [response (chan)]
               (go-loop []
-                (let [result (&lt;! (run-scenario)
-                  (&gt;! response result)))))
+                (let [result (&lt;! (run-scenario)]
+                  (&gt;! response result)))
+                (when (should-continue?)
+                  recur)))
             </pre></code>
           </section>
         </section>
