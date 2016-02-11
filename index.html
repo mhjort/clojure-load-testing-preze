@@ -193,8 +193,8 @@
           <section>
             <h1>Lambdas in parallel</h1>
             <pre><code>
-(mapv #(thread (invoke-lambda % scenarios concurrency))
-      lambda-nodes)
+(map #(thread (invoke-lambda % simulation concurrency))
+     lambda-nodes)
             </pre></code>
           </section>
       </section>
