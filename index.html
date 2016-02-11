@@ -133,11 +133,12 @@
           <section>
             <h1>Sequential scenario steps</h1>
             <pre><code>
-            (doseq [request requests]
-              (let [response (chan)
-                    callback (fn [result] (put! response result))]
-                (go
-                  (request callback))))
+(go
+  (doseq [request requests]
+    (let [response (chan)
+          callback (fn [result] (put! response result))]
+      (request callback)
+      (&gt;! scenario-result (&lt;! response)))))
             </pre></code>
           </section>
           <section>
